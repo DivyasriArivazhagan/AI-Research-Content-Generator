@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Research Content Generator</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <span>ResearchAI</span>
+        </div>
+
+        <p class="nav-heading">WORKSPACE</p>
+
+        <nav>
+            <a href="#dashboard" class="nav-link active">⌂ <span>Dashboard</span></a>
+            <a href="#upload" class="nav-link">⇧ <span>Upload Documents</span></a>
+            <a href="#generate" class="nav-link">✧ <span>Generate Content</span></a>
+            <a href="#agents" class="nav-link">◈ <span>AI Research Agents</span></a>
+            <a href="#library" class="nav-link">▤ <span>Research Library</span></a>
+            <a href="#history" class="nav-link">◷ <span>Generation History</span></a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="profile-avatar">U</div>
+
+            <div>
+                <strong>Research Workspace</strong>
+                <small>AI Content Platform</small>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content" id="dashboard">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+                <p class="eyebrow">WORKSPACE / DASHBOARD</p>
+
+                <h1>AI Research Content Generator</h1>
+
+                <p class="subtitle">
+                    Transform research documents into meaningful content with intelligent AI agents.
+                </p>
+            </div>
+
+            <div class="top-status">
+                <span class="status-dot"></span>
+                Workspace Active
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD STATISTICS -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon cyan">▤</div>
+
+                <div>
+                    <p>Documents Uploaded</p>
+                    <h2 id="documentCount">0</h2>
+                    <small>Research documents</small>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon purple">✧</div>
+
+                <div>
+                    <p>Content Generated</p>
+                    <h2 id="contentCount">0</h2>
+                    <small>Generated outputs</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DOCUMENT UPLOAD -->
+
+        <section class="panel" id="upload">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">DOCUMENT MANAGEMENT</span>
+
+                    <h2>Upload Research Document</h2>
+
+                    <p>
+                        Upload your research files to provide context for AI content generation.
+                    </p>
+                </div>
+
+                <span class="step-number">01</span>
+
+            </div>
+
+
+            <div class="upload-area" id="dropArea">
+
+                <div class="upload-symbol">⇧</div>
+
+                <h3>Drag and drop your files here</h3>
+
+                <p>or browse files from your computer</p>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".pdf,.docx,.pptx,.txt"
+                    multiple
+                    hidden
+                >
+
+                <button class="primary-button" id="browseBtn">
+                    Browse Files
+                </button>
+
+                <div class="file-types">
+                    <span>PDF</span>
+                    <span>DOCX</span>
+                    <span>PPTX</span>
+                    <span>TXT</span>
+                </div>
+
+                <small>Supported formats: PDF, DOCX, PPTX, TXT</small>
+
+            </div>
+
+
+            <div class="upload-bottom">
+
+                <div>
+                    <h3>Selected Documents</h3>
+                    <p id="selectedCount">No files selected</p>
+                </div>
+
+                <button class="primary-button" id="uploadBtn">
+                    Upload Documents
+                </button>
+
+            </div>
+
+
+            <div id="selectedFiles" class="file-list">
+
+                <p class="empty-message">
+                    Your selected files will appear here.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- GENERATE CONTENT -->
+
+        <section class="panel" id="generate">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">CONTENT CREATION</span>
+
+                    <h2>Generate Content</h2>
+
+                    <p>
+                        Enter a research topic and select the content format you want to create.
+                    </p>
+                </div>
+
+                <span class="step-number">02</span>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="topicInput">Research Topic</label>
+
+                <input
+                    type="text"
+                    id="topicInput"
+                    placeholder="Enter your research topic..."
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="contentType">Select Content Type</label>
+
+                <select id="contentType">
+
+                    <option value="">Choose content type</option>
+
+                    <option value="Professional Blog">
+                        Professional Blog
+                    </option>
+
+                    <option value="Research Article">
+                        Research Article
+                    </option>
+
+                    <option value="LinkedIn Post">
+                        LinkedIn Post
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button class="primary-button generate-button" id="generateBtn">
+                ✧ Generate Content
+            </button>
+
+            <p class="helper-text">
+                Upload research documents and provide a topic to prepare your content.
+            </p>
+
+        </section>
+
+
+        <!-- AI RESEARCH AGENTS -->
+
+        <section class="panel" id="agents">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">INTELLIGENT WORKFLOW</span>
+
+                    <h2>AI Research Agents</h2>
+
+                    <p>
+                        Specialized agents work together to prepare research-based content.
+                    </p>
+                </div>
+
+                <span class="step-number">03</span>
+
+            </div>
+
+
+            <div class="agents-grid">
+
+                <div class="agent-card">
+
+                    <div class="agent-icon">⌕</div>
+
+                    <h3>Research Agent</h3>
+
+                    <p>
+                        Analyzes the research topic and identifies useful information.
+                    </p>
+
+                    <span class="agent-tag">Research</span>
+
+                </div>
+
+
+                <div class="agent-card">
+
+                    <div class="agent-icon">▤</div>
+
+                    <h3>Retrieval Agent</h3>
+
+                    <p>
+                        Retrieves relevant information from uploaded documents.
+                    </p>
+
+                    <span class="agent-tag">Document Retrieval</span>
+
+                </div>
+
+
+                <div class="agent-card">
+
+                    <div class="agent-icon">✧</div>
+
+                    <h3>Writer Agent</h3>
+
+                    <p>
+                        Creates structured content based on the retrieved information.
+                    </p>
+
+                    <span class="agent-tag">Content Writing</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- GENERATED CONTENT -->
+
+        <section class="panel" id="output">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">GENERATED RESULTS</span>
+
+                    <h2>Generated Content</h2>
+
+                    <p>
+                        View your generated content and its supporting references.
+                    </p>
+                </div>
+
+                <span class="step-number">04</span>
+
+            </div>
+
+
+            <div class="output-grid">
+
+                <!-- CONTENT PREVIEW -->
+
+                <div class="output-card">
+
+                    <div class="output-heading">
+
+                        <h3>Content Preview</h3>
+
+                        <span class="preview-badge">PREVIEW</span>
+
+                    </div>
+
+                    <div id="contentPreview" class="content-preview">
+
+                        <div class="preview-placeholder">
+
+                            <div class="placeholder-icon">✧</div>
+
+                            <h3>No content generated yet</h3>
+
+                            <p>Your generated content will appear here.</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SUPPORTING REFERENCES -->
+
+                <div class="output-card">
+
+                    <div class="output-heading">
+
+                        <h3>Supporting References</h3>
+
+                    </div>
+
+                    <div id="references" class="references">
+
+                        <div class="reference-placeholder">
+
+                            <span>▤</span>
+
+                            <p>
+                                References from uploaded research documents will appear here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- VERIFICATION REPORT -->
+
+            <div class="output-card verification-card">
+
+                <div class="output-heading">
+
+                    <h3>AI Verification Report</h3>
+
+                    <span class="preview-badge">VERIFICATION</span>
+
+                </div>
+
+                <div id="verificationResult" class="content-preview">
+
+                    <div class="preview-placeholder">
+
+                        <div class="placeholder-icon">✓</div>
+
+                        <h3>Verification Pending</h3>
+
+                        <p>
+                            Verification results will appear after content generation.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESEARCH LIBRARY -->
+
+        <section class="panel" id="library">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">YOUR RESOURCES</span>
+
+                    <h2>Research Library</h2>
+
+                    <p>
+                        Access the documents you have added to your workspace.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div id="libraryList" class="library-list">
+
+                <div class="empty-state">
+
+                    <span>▤</span>
+
+                    <p>No research documents added yet.</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- GENERATION HISTORY -->
+
+        <section class="panel" id="history">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">RECENT ACTIVITY</span>
+
+                    <h2>Generation History</h2>
+
+                    <p>
+                        Review your recent content generation requests.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div id="historyList" class="history-list">
+
+                <div class="empty-state">
+
+                    <span>◷</span>
+
+                    <p>No generation history available.</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <p>
+                AI Research Content Generator
+                <span>•</span>
+                Intelligent Research Workspace
+            </p>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

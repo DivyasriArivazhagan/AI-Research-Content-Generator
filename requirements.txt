@@ -1,0 +1,10 @@
+Flask
+Werkzeug
+chromadb
+sentence-transformers
+numpy
+pymupdf
+python-docx
+python-pptx
+google-genai
+python-dotenv
