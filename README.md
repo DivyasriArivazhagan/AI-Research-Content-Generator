@@ -1,54 +1,93 @@
 # AI-Powered Research-to-Content Generation Agent Using Agentic RAG
 
-## 1. Project Overview
+## Project Overview
 
-The AI-Powered Research-to-Content Generation Agent is an intelligent application that transforms uploaded research documents into structured, meaningful content using Retrieval-Augmented Generation (RAG) and multiple AI agents.
+The AI-Powered Research-to-Content Generation Agent is an intelligent content creation system that uses Agentic Retrieval-Augmented Generation (RAG) to generate accurate and structured content from uploaded research documents.
 
-Users can upload research documents, enter a research topic, and generate content such as professional blogs, research articles, and LinkedIn posts. The system retrieves relevant information from uploaded documents and uses Gemini AI to generate and verify the content against the retrieved sources.
+Users can upload research documents in PDF, DOCX, PPTX, and TXT formats and provide a topic. The system retrieves relevant information from the uploaded documents, generates content using the NavigateLabs Nexus API, and verifies the generated content against the original source material.
 
-## 2. Key Features
+The application helps reduce manual research effort and improves the relevance and reliability of AI-generated content.
 
-- Upload PDF, DOCX, PPTX, and TXT documents.
-- Extract text from uploaded research documents.
-- Split extracted text into smaller chunks.
-- Generate embeddings using Sentence Transformers.
-- Store and retrieve document embeddings using ChromaDB.
-- Detect duplicate document uploads.
-- Retrieve relevant research information based on user queries.
-- Generate content using Google Gemini API.
-- Verify generated content against retrieved source material.
-- Store document details and generation history using SQLite.
-- Display supporting references and verification reports.
-- Maintain document and generation history after page refresh.
+## Key Features
 
-## 3. AI Agent Architecture
+- **Document Upload:** Supports PDF, DOCX, PPTX, and TXT files.
+- **Text Extraction:** Extracts text from uploaded research documents.
+- **Document Chunking:** Splits extracted text into smaller chunks for efficient retrieval.
+- **Semantic Search:** Uses Sentence Transformers to identify relevant information.
+- **Vector Database:** Stores document embeddings using ChromaDB.
+- **Agentic RAG:** Uses multiple agents for research, retrieval, content generation, and verification.
+- **AI Content Generation:** Generates structured content using NavigateLabs Nexus API.
+- **Content Verification:** Identifies verified claims, unsupported claims, contradictions, and suggested corrections.
+- **Source References:** Displays the original document names and chunk references.
+- **Document Management:** Stores uploaded document information.
+- **Generation History:** Maintains previously generated content.
+- **Duplicate Detection:** Uses document hashing to identify duplicate uploads.
 
-### Research Agent
-Analyzes the user's research topic and identifies relevant information from the stored research documents.
+## Technologies Used
 
-### Retrieval Agent
-Retrieves relevant text chunks from ChromaDB and provides source information to the Writer Agent.
+### Frontend
+- HTML
+- CSS
+- JavaScript
 
-### Writer Agent
-Uses Google Gemini to generate structured content based on the retrieved research information.
+### Backend
+- Python
+- Flask
 
-### Verification Agent
-Checks generated content against the retrieved source material and identifies verified claims, unsupported claims, contradictions, and suggested corrections.
+### Artificial Intelligence
+- Agentic RAG
+- NavigateLabs Nexus API
+- OpenAI Python SDK
+- Sentence Transformers
 
-## 4. Technology Stack
+### Database and Storage
+- ChromaDB
+- SQLite
 
-| Component | Technology |
-|---|---|
-| Frontend | HTML, CSS, JavaScript |
-| Backend | Python, Flask |
-| AI Model | Google Gemini |
-| RAG | Retrieval-Augmented Generation |
-| Embeddings | Sentence Transformers |
-| Vector Database | ChromaDB |
-| Database | SQLite |
-| Document Processing | PyMuPDF, python-docx, python-pptx |
+### Document Processing
+- PyMuPDF
+- python-docx
+- python-pptx
 
-## 5. Project Structure
+### Development Tools
+- Visual Studio Code
+- Git
+- GitHub
+
+## System Architecture
+
+The application follows a sequential agent-based workflow.
+
+1. **Document Processing:** Uploaded documents are processed and their text is extracted.
+2. **Chunking:** Extracted text is divided into smaller chunks.
+3. **Embedding Generation:** Sentence Transformers converts text chunks into vector embeddings.
+4. **Vector Storage:** ChromaDB stores the embeddings for semantic retrieval.
+5. **Research Agent:** Searches for relevant information based on the user's topic.
+6. **Retrieval Agent:** Organizes the retrieved information and source references.
+7. **Writer Agent:** Uses the NavigateLabs Nexus API to generate structured content.
+8. **Verification Agent:** Checks generated claims against the retrieved source information.
+9. **Output:** Displays the generated content, references, and verification report.
+
+## Agent Workflow
+
+**Research Agent**
+- Identifies relevant research information from uploaded documents.
+- Retrieves the top five relevant chunks.
+
+**Retrieval Agent**
+- Organizes the retrieved information.
+- Collects source filenames and chunk numbers.
+
+**Writer Agent**
+- Generates blogs, research articles, and LinkedIn posts.
+- Uses retrieved research information as the factual basis.
+
+**Verification Agent**
+- Checks whether claims are supported by source documents.
+- Identifies unsupported claims and contradictions.
+- Provides suggested corrections and a verification summary.
+
+## Project Folder Structure
 
 ```text
 Research_Content_Generator/
@@ -59,6 +98,7 @@ Research_Content_Generator/
 │   ├── pdf_processor.py
 │   └── rag_pipeline.py
 │
+├── generated_content/
 ├── static/
 │   ├── script.js
 │   └── style.css
@@ -67,109 +107,118 @@ Research_Content_Generator/
 │   └── index.html
 │
 ├── uploads/
-├── generated_content/
 ├── vector_db/
 │
-├── app.py
-├── database.py
-├── requirements.txt
-├── research_content.db
 ├── .env
 ├── .gitignore
-└── README.md
+├── app.py
+├── database.py
+├── README.md
+├── requirements.txt
+└── test_nexus.py
 ```
 
-## 6. Installation and Setup
+## Installation and Setup
 
-### Step 1: Clone the Repository
+### 1. Clone the Repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/DivyasriArivazhagan/AI-Research-Content-Generator.git
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
 cd Research_Content_Generator
 ```
 
-### Step 2: Create a Virtual Environment
+### 3. Create a Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-### Step 3: Activate the Virtual Environment
+### 4. Activate the Virtual Environment
 
-Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-### Step 4: Install Dependencies
+For Windows PowerShell:
 
 ```bash
-pip install -r requirements.txt
+.\venv\Scripts\Activate.ps1
 ```
 
-### Step 5: Configure Gemini API Key
+### 5. Install Dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### 6. Configure Environment Variables
 
 Create a `.env` file in the project root directory.
 
+Add the following configuration:
+
 ```env
-GEMINI_API_KEY=your_gemini_api_key
+NEXUS_API_KEY=your_nexus_api_key
+NEXUS_BASE_URL=https://nexusapi.navigatelabs.ai
 ```
 
-Replace the placeholder with your own Google Gemini API key.
+Replace `your_nexus_api_key` with your actual NavigateLabs Nexus API key.
 
-### Step 6: Run the Application
+**Important:** Never upload your actual API key or `.env` file to GitHub.
+
+### 7. Run the Application
 
 ```bash
 python app.py
 ```
 
-Open the following URL in your browser:
+### 8. Open the Application
+
+Open your browser and visit:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-## 7. Application Workflow
+## Requirements
 
-1. User uploads research documents.
-2. The system extracts text from the documents.
-3. Extracted text is divided into smaller chunks.
-4. Sentence Transformers generates embeddings.
-5. ChromaDB stores the embeddings and metadata.
-6. User enters a research topic and selects a content type.
-7. Research and Retrieval Agents retrieve relevant information.
-8. Writer Agent generates content using Gemini.
-9. Verification Agent checks the generated content against retrieved sources.
-10. SQLite stores document metadata and generation history.
+The project dependencies are listed in `requirements.txt`.
 
-## 8. Supported Content Types
+Install them using:
 
-- Professional Blog
-- Research Article
-- LinkedIn Post
+```bash
+python -m pip install -r requirements.txt
+```
 
-## 9. Databases Used
+## Expected Output
 
-**ChromaDB:** Stores document embeddings, text chunks, and metadata for semantic retrieval.
+The application provides:
 
-**SQLite:** Stores uploaded document details and generated content history.
+- Uploaded research document details.
+- Relevant retrieved research information.
+- AI-generated content.
+- Source document references.
+- Verified claims.
+- Unsupported claims.
+- Contradictions.
+- Suggested corrections.
+- Verification summary.
+- Previously generated content history.
 
-## 10. Security Notes
+## Future Enhancements
 
-- Store API keys in the `.env` file.
-- Do not upload API keys to GitHub.
-- Add `.env`, `venv/`, and other sensitive or unnecessary files to `.gitignore`.
-
-## 11. Future Enhancements
-
-- Support additional document formats.
-- Improve multi-agent orchestration.
-- Add user authentication.
-- Support multiple language generation.
-- Improve source-grounded verification.
+- Support for additional document formats.
+- Improved claim-level verification.
+- Advanced multi-agent orchestration.
 - Export generated content as PDF and DOCX.
+- Enhanced source citation and traceability.
+- User authentication and access management.
 
-## 12. Conclusion
+## Repository
 
-This project combines Retrieval-Augmented Generation, vector databases, and AI agents to convert research documents into useful content. It helps users generate structured research-based content while providing supporting references and an AI-assisted verification report.
+GitHub: https://github.com/DivyasriArivazhagan/AI-Research-Content-Generator
+
+## Conclusion
+
+This project demonstrates how Agentic RAG can combine document processing, semantic retrieval, AI-powered content generation, and source-based verification into a single application. It aims to make research-based content creation more efficient, structured, and reliable.

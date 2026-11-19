@@ -4,52 +4,62 @@ import json
 import time
 
 from dotenv import load_dotenv
-from google import genai
+from openai import OpenAI
 
 from backend.rag_pipeline import retrieve_relevant_chunks
 
 
 # ========================================
-# GEMINI CONFIGURATION
+# NEXUS API CONFIGURATION
 # ========================================
 
 load_dotenv()
 
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("NEXUS_API_KEY")
+base_url = os.getenv("NEXUS_BASE_URL")
 
 if not api_key:
-    raise ValueError("GEMINI_API_KEY not found in .env file")
+    raise ValueError("NEXUS_API_KEY not found in .env file")
 
-client = genai.Client(api_key=api_key)
+if not base_url:
+    raise ValueError("NEXUS_BASE_URL not found in .env file")
 
-MODEL_NAME = "gemini-3.5-flash-lite"
+client = OpenAI(
+    api_key=api_key,
+    base_url=base_url
+)
+
+MODEL_NAME = "nova-micro"
 
 MAX_RETRIES = 3
 RETRY_DELAY = 2
 
 
 # ========================================
-# GEMINI API RETRY HANDLER
+# NEXUS API RETRY HANDLER
 # ========================================
 
-def generate_with_retry(prompt, config=None):
+def generate_with_retry(prompt):
 
     for attempt in range(MAX_RETRIES):
 
         try:
-            request_options = {
-                "model": MODEL_NAME,
-                "contents": prompt
-            }
-
-            if config:
-                request_options["config"] = config
-
-            response = client.models.generate_content(
-                **request_options
+            response = client.chat.completions.create(
+                model=MODEL_NAME,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ]
             )
 
-            return response
+            generated_text = response.choices[0].message.content
+
+            if not generated_text:
+                raise ValueError("Nexus API returned an empty response")
+
+            return generated_text
 
         except Exception as error:
 
@@ -62,7 +72,9 @@ def generate_with_retry(prompt, config=None):
                 "502",
                 "504",
                 "429",
-                "resource_exhausted"
+                "rate limit",
+                "timeout",
+                "temporarily"
             ]
 
             is_temporary = any(
@@ -75,7 +87,7 @@ def generate_with_retry(prompt, config=None):
                 wait_time = RETRY_DELAY * (2 ** attempt)
 
                 print(
-                    f"Gemini temporary error. "
+                    f"Nexus API temporary error. "
                     f"Retrying in {wait_time} seconds... "
                     f"Attempt {attempt + 2}/{MAX_RETRIES}"
                 )
@@ -197,12 +209,10 @@ Generate the complete content now.
 
     try:
 
-        response = generate_with_retry(prompt)
-
-        generated_content = response.text
+        generated_content = generate_with_retry(prompt)
 
         if not generated_content:
-            raise ValueError("Gemini returned an empty response")
+            raise ValueError("Nexus returned an empty response")
 
         return {
             "status": "success",
@@ -271,7 +281,7 @@ VERIFICATION INSTRUCTIONS:
 6. If evidence is insufficient, clearly state that.
 7. Do not assume a claim is verified merely because it sounds correct.
 
-Return ONLY valid JSON in this format:
+Return ONLY valid JSON in this exact format:
 
 {{
     "overall_status": "Verified, Partially Verified, or Needs Review",
@@ -285,17 +295,21 @@ Return ONLY valid JSON in this format:
 
     try:
 
-        response = generate_with_retry(
-            verification_prompt,
-            config={
-                "response_mime_type": "application/json"
-            }
-        )
+        response_text = generate_with_retry(verification_prompt)
 
-        if not response.text:
-            raise ValueError("Gemini returned an empty verification response")
+        if not response_text:
+            raise ValueError("Nexus returned an empty verification response")
 
-        verification_result = json.loads(response.text)
+        # Extract JSON if the model adds extra text or code fences
+        start = response_text.find("{")
+        end = response_text.rfind("}")
+
+        if start == -1 or end == -1:
+            raise ValueError("Nexus did not return valid JSON")
+
+        json_text = response_text[start:end + 1]
+
+        verification_result = json.loads(json_text)
 
         required_fields = [
             "overall_status",

@@ -3,6 +3,7 @@
 // AI RESEARCH CONTENT GENERATOR
 // Complete Frontend JavaScript
 // SQLite Persistence Integrated
+// NavigateLabs Nexus API Integration
 // ========================================
 
 
@@ -671,7 +672,7 @@ function renderVerification(data) {
 
 
 // ========================================
-// GENERATE CONTENT USING GEMINI AI
+// GENERATE CONTENT USING NEXUS API
 // ========================================
 
 generateBtn.addEventListener("click", async () => {
@@ -717,7 +718,7 @@ generateBtn.addEventListener("click", async () => {
 
     generateBtn.disabled = true;
 
-    generateBtn.textContent = "Generating with Gemini...";
+    generateBtn.textContent = "Generating with Nexus API...";
 
 
     contentPreview.textContent =
@@ -775,7 +776,7 @@ generateBtn.addEventListener("click", async () => {
 
         if (!result.generated_content) {
 
-            throw new Error("Gemini returned empty content.");
+            throw new Error("Nexus API returned empty content.");
 
         }
 
